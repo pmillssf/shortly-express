@@ -104,11 +104,28 @@ app.post('/signup', function(req, res, next) {
       }
     }
   });
-    // if exists, redirect to '/signup'
-    // else 
-      // hash password
-      // insert user with hashedPassword
-      // redirect to '/'
+});
+
+app.post('/login', function(req, res, next) {
+  // Check if user exists
+  Users.getUserByUsername(req.body.username, function(err, user) {
+    if (err) {
+      res.status(400).send(err);
+    } else if (!user) {
+      res.redirect('/login');
+    } else {
+      Users.verifyPassword(user.password, req.body.password, function(err, match) {
+        if (match) {
+          res.redirect('/');
+        } else {
+          res.redirect('/login');
+        }
+      });
+    }
+  });
+    // if exists and passwords match 
+       // redirect to '/'
+    // else redirect to '/login'
 });
 
 

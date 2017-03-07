@@ -29,7 +29,20 @@ var getUserByUsername = function (username, callback) {
     }
   });
 };
+
+var verifyPassword = function(storedPassword, password, callback) {
+  console.log('passwordverify');
+  return utils.hash(password, function(err, key) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, key === storedPassword);
+    }
+  });
+};
+
 module.exports = {
   post: post,
-  getUserByUsername: getUserByUsername
+  getUserByUsername: getUserByUsername,
+  verifyPassword: verifyPassword
 };
