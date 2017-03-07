@@ -30,6 +30,13 @@ module.exports = function(db) {
     timestamp TIMESTAMP,\
     Unique (username)\
     );');
+  }).then(function() {
+    return db.queryAsync('CREATE TABLE IF NOT EXISTS sessions (\
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+    hash VARCHAR(255),\
+    user_id INT,\
+    timestamp TIMESTAMP\
+    );');
   })
   /************************************************************/
   /*          Add additional schema queries here              */
@@ -40,3 +47,4 @@ module.exports = function(db) {
   });
 };
 
+// Double check user_id field in sessions
