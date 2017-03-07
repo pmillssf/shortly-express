@@ -21,3 +21,13 @@ exports.isValidUrl = function(url) {
 // Add additional utility functions below
 /************************************************************/
 
+
+exports.hash = function(password, callback) {
+  crypto.pbkdf2(password, 'salt', 100000, 255, 'sha1', function (err, key) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, key.toString());
+    }
+  });
+};

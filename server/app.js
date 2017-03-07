@@ -85,7 +85,31 @@ function(req, res, next) {
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
-
+app.post('/signup', function(req, res, next) {
+  // check if user exists already
+  Users.getUserByUsername(req.body.username, function(err, results) {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (results !== undefined) {
+        res.redirect('/signup');
+      } else {
+        Users.post(req.body.username, req.body.password, function(err, results) {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.redirect('/');
+          }
+        });
+      }
+    }
+  });
+    // if exists, redirect to '/signup'
+    // else 
+      // hash password
+      // insert user with hashedPassword
+      // redirect to '/'
+});
 
 
 /************************************************************/
