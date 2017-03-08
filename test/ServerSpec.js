@@ -47,7 +47,7 @@ describe('', function() {
     /**************************************************************************************/
     /* TODO: If you create a new MySQL tables, add it to the tablenames collection below. */
     /**************************************************************************************/
-    var tablenames = ['links', 'clicks', 'users', 'sessions'
+    var tablenames = ['links', 'clicks', 'sessions', 'users'
 ];
 
     db.connect(function(err) {
@@ -62,7 +62,7 @@ describe('', function() {
     afterEach(function() { server.close(); });
   });
 
-  xdescribe('Database Schema:', function() {
+  describe('Database Schema:', function() {
     it('contains a users table', function(done) {
       var queryString = 'SELECT * FROM users';
       db.query(queryString, function(err, results) {
@@ -125,7 +125,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Account Creation:', function() {
+  describe('Account Creation:', function() {
 
     it('signup creates a new user record', function(done) {
       var options = {
@@ -210,7 +210,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Account Login:', function() {
+  describe('Account Login:', function() {
 
     beforeEach(function(done) {
       var options = {
@@ -279,7 +279,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Sessions Schema:', function() {
+  describe('Sessions Schema:', function() {
     it('contains a sessions table', function(done) {
       var queryString = 'SELECT * FROM sessions';
       db.query(queryString, function(err, results) {
@@ -374,11 +374,14 @@ describe('', function() {
     });
 
     describe('Session Parser', function() {
+      this.timeout(15000);
       it('initializes a new session when there are no cookies on the request', function() {
+        console.log('run');
         var requestWithoutCookies = httpMocks.createRequest();
         var response = httpMocks.createResponse();
 
         sessionParser(requestWithoutCookies, response, function() {
+          console.log('session');
           var session = requestWithoutCookies.session;
           expect(session).to.be.an('object');
           expect(session.hash).to.exist;
@@ -386,6 +389,7 @@ describe('', function() {
       });
 
       it('sets a new cookie on the response when a session is initialized', function() {
+        this.timeout(15000);
         var requestWithoutCookie = httpMocks.createRequest();
         var response = httpMocks.createResponse();
 
@@ -393,23 +397,29 @@ describe('', function() {
           var cookies = response.cookies;
           expect(cookies['shortlyid']).to.exist;
           expect(cookies['shortlyid'].value).to.exist;
+          console.log('cookie');
         });
       });
 
       it('assigns a session object to the request if a session already exists', function(done) {
+        this.timeout(15000);
 
         var requestWithoutCookie = httpMocks.createRequest();
         var response = httpMocks.createResponse();
 
         sessionParser(requestWithoutCookie, response, function() {
+          console.log('1');
           var cookie = response.cookies.shortlyid.value;
           var secondResponse = httpMocks.createResponse();
           var requestWithCookies = httpMocks.createRequest();
           requestWithCookies.cookies.shortlyid = cookie;
+          console.log('first');
 
           sessionParser(requestWithCookies, secondResponse, function() {
+            console.log('rqwco', requestWithCookies);
             var session = requestWithCookies.session;
             expect(session).to.be.an('object');
+            console.log('session', session);
             expect(session.hash).to.exist;
             expect(session.hash).to.be.cookie;
             done();

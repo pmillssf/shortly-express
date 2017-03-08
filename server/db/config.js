@@ -35,8 +35,7 @@ module.exports = function(db) {
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
     hash VARCHAR(255),\
     user_id INT,\
-    timestamp TIMESTAMP,\
-    FOREIGN KEY (user_id) REFERENCES users(id)\
+    timestamp TIMESTAMP\
     );');
   })
   /************************************************************/

@@ -1,5 +1,6 @@
 var parseCookies = function(req, res, next) {
   var cookies = req.get('Cookie');
+  console.log('cookies', cookies);
   if (cookies) {
     cookies = cookies.split(' ');
     req.cookies = {};
@@ -7,8 +8,10 @@ var parseCookies = function(req, res, next) {
       var cookie = cookies[i].split('=');
       if (cookie[1].includes(';')) {
         req.cookies[cookie[0]] = cookie[1].slice(0, -1);
+        console.log('multi', cookie[1].slice(0, -1));
       } else {
         req.cookies[cookie[0]] = cookie[1];
+        console.log('single', cookie[1]);
       }
     }
     next();
